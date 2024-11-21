@@ -15,6 +15,9 @@
 - Chưa có tìm kiếm mã lớp
 
 *NOTE VỀ DATABASE:
-1. Bảng Sinh viên bỏ trường GVHD
-2. Bảng Giảng viên bỏ trường Lớp giảng dạy, thêm học vị
+1. Bảng sinhvien bỏ trường GVHD
+2. Bảng thoikhoabieu thêm trường MaLop và là khóa chính, 
+    Đổi trường TenGiangVien thành GiangVien và là khóa ngoại đến MaID (giangvien)
+  [Chưa bổ sung thêm các trường như trên giao diện đã vẽ, lúc làm đến thì sửa sau :V ]
+3. Bảng ketquasv đổi MaLHP thành MaLop, là khóa ngoại đến MaLop (thoikhoabieu)
 
