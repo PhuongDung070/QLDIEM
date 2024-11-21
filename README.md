@@ -1,5 +1,5 @@
 HHƯỚNG DẪN:
-1. Giải nén và lưu vào "C:\xampp\htdocs\QLDIEM"
+1. Tải về, giải nén và lưu vào "C:\xampp\htdocs\..."
 2. Khởi động XAMPP
 3. Import file qldiem.sql lên phpMyAdmin 
 4. Mở đường dẫn http://localhost:8080/QLDIEM/login.php để bắt đầu  [port:8080 thay đổi theo xampp]
