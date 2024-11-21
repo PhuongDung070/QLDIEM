@@ -1,13 +1,4 @@
-- Đăng nhập
-- Đăng xuất
-- Đổi mật khẩu
-- Hiển thị thông tin sinh viên
-- Hiển thị thông tin giảng viên
-- Hiển thị thông tin nhân viên
-- Thêm thông tin sinh viên
-- Sinh viên xem chương trình đào tạo
-- Sinh viên xem điểm và kết quả học tập: chưa có 
-- Giảng viên quản lý điểm (tải lên bằng excel đang lỗi)
+
 1. Đăng nhập
 2. Đăng xuất
 3. Đổi mật khẩu
@@ -21,6 +12,7 @@
 - Chưa có lọc theo kì và năm học vì trong database không có trường để lọc
 10. Giảng viên quản lý điểm
 - Tải lên bằng excel lỗi
+- Chưa có tìm kiếm mã lớp
 
 *NOTE VỀ DATABASE:
 1. Bảng Sinh viên bỏ trường GVHD
