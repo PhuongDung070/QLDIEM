@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 21, 2024 at 06:37 PM
+-- Generation Time: Nov 22, 2024 at 10:49 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -365,24 +365,27 @@ CREATE TABLE `thoikhoabieu` (
   `MaLHP` varchar(10) NOT NULL,
   `PhongHoc` varchar(11) NOT NULL,
   `ThoiGianHoc` varchar(11) NOT NULL,
-  `GiangVien` varchar(100) NOT NULL
+  `GiangVien` varchar(100) NOT NULL,
+  `Ngày học` varchar(10) DEFAULT NULL,
+  `Thời gian bắt đầu` date DEFAULT NULL,
+  `Thời gian kết thúc` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `thoikhoabieu`
 --
 
-INSERT INTO `thoikhoabieu` (`MaLop`, `MaLHP`, `PhongHoc`, `ThoiGianHoc`, `GiangVien`) VALUES
-('LHP001', 'HP001', 'A101', 'Thứ 2 08:00', 'NV01'),
-('LHP002', 'HP002', 'A102', 'Thứ 2 10:00', 'NV01'),
-('LHP003', 'HP003', 'A103', 'Thứ 2 12:00', 'NV03'),
-('LHP004', 'HP004', 'B201', 'Thứ 3 08:00', 'NV04'),
-('LHP005', 'HP005', 'B202', 'Thứ 3 10:00', 'NV01'),
-('LHP006', 'HP006', 'C301', 'Thứ 4 08:00', 'NV06'),
-('LHP007', 'HP007', 'C302', 'Thứ 4 10:00', 'NV07'),
-('LHP008', 'HP008', 'D401', 'Thứ 5 08:00', 'NV08'),
-('LHP009', 'HP009', 'D402', 'Thứ 5 10:00', 'NV09'),
-('LHP010', 'HP010', 'E501', 'Thứ 6 08:00', 'NV10');
+INSERT INTO `thoikhoabieu` (`MaLop`, `MaLHP`, `PhongHoc`, `ThoiGianHoc`, `GiangVien`, `Ngày học`, `Thời gian bắt đầu`, `Thời gian kết thúc`) VALUES
+('LHP001', 'HP001', 'A101', 'Thứ 2 08:00', 'NV01', NULL, NULL, NULL),
+('LHP002', 'HP002', 'A102', 'Thứ 2 10:00', 'NV01', NULL, NULL, NULL),
+('LHP003', 'HP003', 'A103', 'Thứ 2 12:00', 'NV03', NULL, NULL, NULL),
+('LHP004', 'HP004', 'B201', 'Thứ 3 08:00', 'NV04', NULL, NULL, NULL),
+('LHP005', 'HP005', 'B202', 'Thứ 3 10:00', 'NV01', NULL, NULL, NULL),
+('LHP006', 'HP006', 'C301', 'Thứ 4 08:00', 'NV06', NULL, NULL, NULL),
+('LHP007', 'HP007', 'C302', 'Thứ 4 10:00', 'NV07', NULL, NULL, NULL),
+('LHP008', 'HP008', 'D401', 'Thứ 5 08:00', 'NV08', NULL, NULL, NULL),
+('LHP009', 'HP009', 'D402', 'Thứ 5 10:00', 'NV09', NULL, NULL, NULL),
+('LHP010', 'HP010', 'E501', 'Thứ 6 08:00', 'NV10', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
