@@ -115,32 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ===============================
     // Tab Handling
     // ===============================
-window.openTab = function(evt, tabId) {
-        // Ẩn tất cả nội dung tab
-        const contents = document.querySelectorAll('.tab-content');
-        contents.forEach(content => content.style.display = 'none');
 
-        // Xóa class 'active' trên tất cả nút
-        const buttons = document.querySelectorAll('.tab-button');
-        buttons.forEach(button => button.classList.remove('active'));
-
-        // Hiển thị tab được chọn
-        const activeTab = document.getElementById(tabId);
-        if (activeTab) {
-            activeTab.style.display = 'block';
-        }
-
-        // Thêm class 'active' vào nút được chọn
-        evt.currentTarget.classList.add('active');
-    }
-
-    // Hiển thị tab đầu tiên mặc định
-    function showDefaultTab() {
-        const firstTabButton = document.querySelector('.tab-button');
-        if (firstTabButton) {
-            firstTabButton.click();
-        }
-    }
 
     // ===============================
     // Delete Popup Handling
@@ -167,23 +142,6 @@ window.openTab = function(evt, tabId) {
 	}
 
 
-    // Function to submit the delete form based on the selected option
-     window.submitDeleteForm = function(type) {
-       document.getElementById('deleteType').value = type;
-        let selectedStudents = [];
-        document.querySelectorAll('input[name="selected_students[]"]:checked').forEach(function(checkbox) {
-            selectedStudents.push(checkbox.value);
-        });
-
-        // If there are selected students, set them in the hidden input
-        if (selectedStudents.length > 0) {
-            document.getElementById('selectedStudents').value = selectedStudents.join(',');
-            document.getElementById('deleteForm').submit();
-        } else {
-            alert("Vui lòng chọn sinh viên cần xóa.");
-        }
-    }
-
     // Khởi tạo các chức năng
     initSlidebar();
     initProfileDropdown();
@@ -191,8 +149,6 @@ window.openTab = function(evt, tabId) {
     initPopupEvents();
     initChangePasswordForm();
 
-    // Gọi hàm hiển thị tab mặc định
-    showDefaultTab();
 	
 	function showDetails(maLHP) {
     fetch(`get_details.php?MaLHP=${maLHP}`)

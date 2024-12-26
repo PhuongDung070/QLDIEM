@@ -21,9 +21,9 @@
     $error_msg = "Người dùng không tồn tại!";
     exit();
 }
-$ma_id_sinh_vien = isset($_GET['MaID']) ? $_GET['MaID'] : null;
-if ($ma_id_sinh_vien) {
-		$taikhoan_info = get_account_info($conn, $ma_id_sinh_vien);
+$ma_id = isset($_GET['MaID']) ? $_GET['MaID'] : null;
+if ($ma_id) {
+		$taikhoan_info = get_account_info($conn, $ma_id);
 			if ($taikhoan_info) {
 			$ten_dang_nhap = $taikhoan_info['TenDangNhap'];
 			$mat_khau = $taikhoan_info['MatKhau'];
@@ -34,50 +34,52 @@ if ($ma_id_sinh_vien) {
 	
 		$result_khoa = get_khoa_list($conn);
 	
-	// Truy vấn chi tiết sinh viên
+	// Truy vấn chi tiết 
 	
-		$student_info = get_student_info($conn, $ma_id_sinh_vien);
-		if ($student_info) {
+		$user_info = get_admin_info($conn, $ma_id);
+		if ($user_info) {
 		} else {
-			echo "<p>Không tìm thấy sinh viên.</p>";
+			echo "<p>Không tìm thấy nhân viên.</p>";
 			exit();
 		}
 	} else {
-		echo "<p>Không có mã sinh viên được cung cấp.</p>";
+		echo "<p>Không có mã nhân viên được cung cấp.</p>";
 		exit();
 	}
 	
 	if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
     // Lấy dữ liệu từ form
     $maID = $_POST['MaID']; 
-    $tenSV = $_POST['TenSV'];
+    $tenNV = $_POST['TenNV'];
+	$ngaySinh = $_POST['NgaySinh'];
     $diaChi = $_POST['DiaChi'];
-    $ngaySinh = $_POST['NgaySinh'];
     $gioiTinh = $_POST['GioiTinh'];
     $sdt = $_POST['SDT'];
     $email = $_POST['Email'];
-    $lopHC = $_POST['LopHC'];
-    $khoaHoc = $_POST['KhoaHoc']; // Thay đổi tên biến cho phù hợp
-    $hinhThucDT = $_POST['HinhThucDT'];
-    $maKhoa = $_POST['MaKhoa'];
+	$phongBan = $_POST['PhongBan'];
+    $chucVu = $_POST['ChucVu'];
 	$tenDangNhap = $_POST['TenDangNhap'];
     $matKhau = $_POST['MatKhau'];
 	$quyen = $_POST['Quyen'];
 
-    // Gọi hàm cập nhật thông tin sinh viên
-    $update_student_result = update_student_info($conn, $maID, $tenSV, $diaChi, $ngaySinh, $gioiTinh, $sdt, $email, $lopHC, $khoaHoc, $maKhoa, $hinhThucDT);
+    // Gọi hàm cập nhật thông tin giảng viên
+	$update_staff_result = update_staff_info($conn, $maID, $tenNV,  $ngaySinh, $diaChi, $gioiTinh, $sdt, $email);
+    $update_admin_result = update_admin_info($conn,$maID, $phongBan, $chucVu);
 
     // Gọi hàm cập nhật thông tin tài khoản
     $update_account_result = update_account_info($conn, $maID, $tenDangNhap, $matKhau, $quyen);
 
     // Kiểm tra kết quả
-    if ($update_student_result === true && $update_account_result === true) {
+    if ($update_staff_result === true && $update_admin_result === true && $update_account_result === true) {
         header("Location: " . $_SERVER['PHP_SELF'] . "?MaID=" . urlencode($maID));
         exit(); 
     } else {
         echo "Lỗi cập nhật: ";
-        if ($update_student_result !== true) {
-            echo "Sinh viên - " . $update_student_result . "<br>";
+		if ($update_staff_result !== true) {
+            echo "Nhân viên - " . $update_staff_result . "<br>";
+        }
+        if ($update_admin_result !== true) {
+            echo "Giảng viên - " . $update_admin_result . "<br>";
         }
         if ($update_account_result !== true) {
             echo "Tài khoản - " . $update_account_result . "<br>";
@@ -150,7 +152,7 @@ $conn->close();
 			<div class="title" style="margin-left: 120px;"> <img src="img/next.png" alt="Profile  Image" style="width: 40px;"> <h2>Quản lý thông tin người dùng</h2> </div>
 			<div class="info-card" style="display: block;">
 				<div class="student-details">
-					<form method="POST" >
+					<form method="POST">
 							<div class="infor1">
 							<button type="button" id="backButton">BACK</button>
 							<button type="button" id="editButton">Chỉnh sửa</button>
@@ -159,78 +161,60 @@ $conn->close();
 							</div>
 							<table border="1">
 								<tr>
-									<td><strong>Mã sinh viên</strong></td>
+									<td><strong>Mã nhân viên</strong></td>
 									<td>
-										<input type="text" name="MaID" value="<?php echo htmlspecialchars($student_info['MaID']); ?>" readonly />
+										<input type="text" name="MaID" value="<?php echo htmlspecialchars($user_info['MaID']); ?>" readonly />
 									</td>
 								</tr>
 								<tr>
 									<td><strong>Họ tên</strong></td>
 									<td>
-										<input type="text" name="TenSV" value="<?php echo htmlspecialchars($student_info['TenSV']); ?>" disabled />
+										<input type="text" name="TenNV" value="<?php echo htmlspecialchars($user_info['TenNV']); ?>" disabled />
 									</td>
 								</tr>
 								<tr>
 									<td><strong>Địa chỉ</strong></td>
 									<td>
-										<input type="text" name="DiaChi"  value="<?php echo htmlspecialchars($student_info['DiaChi']); ?>" disabled />
+										<input type="text" name="DiaChi"  value="<?php echo htmlspecialchars($user_info['DiaChi']); ?>" disabled />
 									</td>
 								</tr>
 								<tr>
 									<td><strong>Ngày sinh</strong></td>
 									<td>
-										<input type="date" name="NgaySinh" value="<?php echo htmlspecialchars($student_info['NgaySinh']); ?>" disabled />
+										<input type="date" name="NgaySinh" value="<?php echo htmlspecialchars($user_info['NgaySinh']); ?>" disabled />
 									</td>
 								</tr>
 								<tr>
 									<td><strong>Giới tính</strong></td>
 									<td>
 										<select name="GioiTinh" disabled>
-											<option value="Nam" <?php if ($student_info['GioiTinh'] == 'Nam') echo 'selected'; ?> >Nam</option>
-											<option value="Nữ" <?php if ($student_info['GioiTinh'] == 'Nữ') echo 'selected'; ?>>Nữ</option>
+											<option value="Nam" <?php if ($user_info['GioiTinh'] == 'Nam') echo 'selected'; ?> >Nam</option>
+											<option value="Nữ" <?php if ($user_info['GioiTinh'] == 'Nữ') echo 'selected'; ?>>Nữ</option>
 										</select>
 									</td>
 								</tr>
 								<tr>
 									<td><strong>Số điện thoại</strong></td>
 									<td>
-										<input type="text" name="SDT" value="<?php echo htmlspecialchars($student_info['SDT']); ?>" disabled />
+										<input type="text" name="SDT" value="<?php echo htmlspecialchars($user_info['SDT']); ?>" disabled />
 									</td>
 								</tr>
 								<tr>
 									<td><strong>Email</strong></td>
 									<td>
-										<input type="email" name="Email" value="<?php echo htmlspecialchars($student_info['Email']); ?>" disabled />
+										<input type="email" name="Email" value="<?php echo htmlspecialchars($user_info['Email']); ?>" disabled />
 									</td>
 								</tr>
 								<tr>
-									<td><strong>Lớp hành chính</strong></td>
+									<td><strong>Phòng ban</strong></td>
 									<td>
-										<input type="text" name="LopHC" value="<?php echo htmlspecialchars($student_info['LopHC']); ?>" disabled />
+										<input type="text" name="PhongBan" value="<?php echo htmlspecialchars($user_info['PhongBan']); ?>" disabled />
 									</td>
 								</tr>
 								<tr>
-									<td><strong>Ngành Học</strong></td>
-									<td> 
-									<select name="MaKhoa" disabled>
-										<?php
-										while ($khoa = $result_khoa->fetch_assoc()) {
-											echo "<option value='" . $khoa['MaKhoa'] . "' " . ($student_info['MaKhoa'] == $khoa['MaKhoa'] ? 'selected' : '') . ">" . htmlspecialchars($khoa['TenKhoa']) . "</option>";
-										}
-										?>
-									</select>
-									</td>
-								</tr>
-								<tr>
-									<td><strong>Khóa Học</strong></td>
+									<td><strong>Chức Vụ</strong></td>
 									<td>
-										<input type="text" name="KhoaHoc" value="<?php echo htmlspecialchars($student_info['KhoaHoc']); ?>" disabled />
-									</td>
-								</tr>
-								<tr>
-									<td><strong>Hình thức đào tạo</strong></td>
-									<td>
-										<input type="text" name="HinhThucDT" value="<?php echo htmlspecialchars($student_info['HinhThucDT']); ?>" disabled />
+										<input type="text" name="ChucVu" value="<?php echo htmlspecialchars($user_info['ChucVu']); ?>" disabled />
 									</td>
 								</tr>
 								<tr>
@@ -252,7 +236,7 @@ $conn->close();
 									</td>
 								</tr>
 								<tr style="display:none;">
-									<td> <input type="checkbox" name="selected_students[]" value= "<?php echo htmlspecialchars($student_info['MaID']); ?> " checked> </td>
+									<td> <input type="checkbox" name="selected_admins[]" value="<?php echo htmlspecialchars($user_info['MaID']); ?> " checked> </td>
 								</tr>
 							</table>				
 						</form>
@@ -286,11 +270,11 @@ $conn->close();
 			<div  class="popup-content" style=" margin-left: 500px;  margin-top: 250px;">
 				<h2>Bạn muốn xóa gì?</h2>
 				<p>Hãy chọn loại dữ liệu cần xóa:</p>
+				<div id="selectedIDsDisplay" style="margin-top: 10px; font-weight: bold;"></div>
 				<form id="deleteForm" method="POST">
 					<input type="hidden" name="action" value="delete">
 					<input type="hidden" name="type" id="deleteType">
 					<input type="hidden" name="selected_ids[]" id="selectedIDs">
-					<div id="selectedIDsDisplay" style="margin-top: 10px; font-weight: bold;"></div>
 					<button type="button" onclick="submitDeleteForm('info')">Xóa thông tin</button>
 					<button type="button" onclick="submitDeleteForm('all')">Xóa toàn bộ</button>
 					<button type="button" id="closePopupDelete">Hủy</button>
@@ -299,115 +283,89 @@ $conn->close();
 		</div>
 		 <script src="script.js"> </script>
 		 <script>
-			const editButton = document.getElementById("editButton");
-			const saveButton = document.getElementById("saveButton");
-			const backButton = document.getElementById("backButton");
-			const formInputs = document.querySelectorAll("form input, form select");
+		 const editButton = document.getElementById("editButton");
+    const saveButton = document.getElementById("saveButton");
+    const backButton = document.getElementById("backButton");
+    const formInputs = document.querySelectorAll("form input, form select");
 
-			// Disable all inputs by default except MaID
-			formInputs.forEach(input => {
-				if (input.name !== "MaID") {
-					input.disabled = true;
-				}
-			});
+    // Disable all inputs by default except MaID
+    formInputs.forEach(input => {
+        if (input.name !== "MaID") {
+            input.disabled = true;
+        }
+    });
 
-			// Event listener for the Edit button
-		if (editButton) {
-			editButton.addEventListener("click", function () {
-				formInputs.forEach(input => {
-					if (input.name !== "MaID") {
-						input.disabled = false;
-					}
-				});
-				saveButton.style.display = "inline-block";
-				editButton.style.display = "none";
-			});
-		}
+    // Event listener for the Edit button
+if (editButton) {
+    editButton.addEventListener("click", function () {
+        formInputs.forEach(input => {
+            if (input.name !== "MaID") {
+                input.disabled = false;
+            }
+        });
+        saveButton.style.display = "inline-block";
+        editButton.style.display = "none";
+    });
+}
 
-		if (saveButton) {
-			saveButton.addEventListener("click", function () {
-				alert("Lưu thông tin thành công!");
-			});
-		}
+if (saveButton) {
+    saveButton.addEventListener("click", function () {
+        alert("Lưu thông tin thành công!");
+    });
+}
 
-		if (backButton) {
-			backButton.addEventListener("click", function () {
-				window.location.href = "user_management.php"; 
-			});
-		}
-		
-					// Mở popup xóa
-				document.querySelectorAll("button[type='button'][id='openPopupDelete']").forEach(button => {
-			button.addEventListener("click", function (e)  {
-				
-				// Kiểm tra các ô đã chọn
-				const selectedStudents = document.querySelectorAll("input[name='selected_students[]']:checked");
-				const selectedTeachers = document.querySelectorAll("input[name='selected_teachers[]']:checked");
-				const selectedAdmins = document.querySelectorAll("input[name='selected_admins[]']:checked");
+if (backButton) {
+    backButton.addEventListener("click", function () {
+        window.location.href = "user_management.php"; // Redirect
+    });
+}
 
-				// Tạo mảng để lưu ID đã chọn
-				let selectedIDs = [];
 
-				if (selectedStudents.length === 0 && selectedTeachers.length === 0 && selectedAdmins.length === 0) {
-					alert("Chưa chọn đối tượng để xóa");
-					return;
-				}
+document.querySelectorAll("#openPopupDelete").forEach(button => {
+    button.addEventListener("click", function () {
+        // Lấy các checkbox đã chọn
+        const selectedAdmins = document.querySelectorAll("input[name='selected_admins[]']:checked");
+        const selectedIDs = [];
 
-				// Lấy ID từ các checkbox đã chọn
-				selectedStudents.forEach(student => selectedIDs.push(student.value));
-				selectedTeachers.forEach(teacher => selectedIDs.push(teacher.value));
-				selectedAdmins.forEach(admin => selectedIDs.push(admin.value));
+        // Thu thập giá trị từ các checkbox đã chọn
+        selectedAdmins.forEach(admin => selectedIDs.push(admin.value));
 
-				// Hiển thị các ID đã chọn trong popup
-				document.getElementById('selectedIDsDisplay').innerText = "ID đã chọn: " + selectedIDs.join(', ');
+        // Kiểm tra nếu không có ID nào được chọn
+        if (selectedIDs.length === 0) {
+            alert("Vui lòng chọn đối tượng cần xóa.");
+            return;
+        }
 
-				// Gán ID đã chọn vào input hidden
-				const selectedIDsInput = document.getElementById('selectedIDs');
-				selectedIDsInput.value = ''; // Đặt giá trị ban đầu là rỗng
+        // Hiển thị danh sách các ID đã chọn trong popup
+        const selectedIDsDisplay = document.getElementById("selectedIDsDisplay");
+        selectedIDsDisplay.innerText = `Các ID đã chọn: ${selectedIDs.join(", ")}`;
 
-				// Tạo các input ẩn cho từng ID đã chọn
-				selectedIDs.forEach(id => {
-					const input = document.createElement('input');
-					input.type = 'hidden';
-					input.name = 'selected_ids[]'; // Tên mảng
-					input.value = id; // Giá trị ID
-					selectedIDsInput.parentNode.appendChild(input); // Thêm vào form
-				});
+        // Gán giá trị vào input ẩn để gửi đến server
+        document.getElementById("selectedIDs").value = selectedIDs.join(",");
 
-				// Hiển thị popup xóa
-				document.getElementById('popupOverlayDelete').style.display = 'block';
-			});
-		});
+        // Hiển thị popup
+        document.getElementById("popupOverlayDelete").style.display = "block";
+    });
+});
+
+// Đóng popup xóa
+document.getElementById("closePopupDelete").addEventListener("click", function () {
+    document.getElementById("popupOverlayDelete").style.display = "none";
+});
+
 
 			// Hàm gửi form xóa
-			window.submitDeleteForm = function(type) {
-				const selectedIDs = document.querySelectorAll("input[name='selected_ids[]']"); // Lấy tất cả input ẩn
-
-				if (selectedIDs.length === 0) {
-					alert("Vui lòng chọn ít nhất một đối tượng để xóa.");
-					return;
+			function submitDeleteForm(deleteType) {
+				if (deleteType === "info") {
+					document.getElementById("deleteType").value = "info";
+				} else if (deleteType === "all") {
+					document.getElementById("deleteType").value = "all";
 				}
+				document.getElementById("deleteForm").submit();
+			}
+			
 
-				// Gán giá trị cho trường type
-				document.getElementById('deleteType').value = type;
-
-				// Thay đổi action của form dựa trên loại đối tượng
-				const form = document.getElementById('deleteForm');
-				if (document.querySelectorAll("input[name='selected_students[]']:checked").length > 0) {
-					form.action = 'handle_students.php';
-				} else if (document.querySelectorAll("input[name='selected_teachers[]']:checked"). length > 0) {
-					form.action = 'handle_teachers.php';
-				} else if (document.querySelectorAll("input[name='selected_admins[]']:checked").length > 0) {
-					form.action = 'handle_admins.php';
-				} else {
-					alert("Vui lòng chọn ít nhất một đối tượng để xóa.");
-					return; // Ngăn không cho gửi form nếu không có đối tượng nào được chọn
-				}
-
-				// Gửi form
-				form.submit();
-			};
-		 </script>
+		</script>
 		</body>
 	</html>
 

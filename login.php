@@ -33,7 +33,7 @@ $conn->close();
 		<h1>ĐĂNG NHẬP</h1>
 		<h5>Cổng thông tin đào tạo</h5>
 		<form id="loginForm" class="login" method="POST" autocomplete="off">
-		<table>
+		<table style="border-collapse: collapse; border: none;">
 			<tr>
 				<td> <label for="username">Tên đăng nhập:</label>
 				<input type="text" id="username" name="username" placeholder="Enter your Username" required>

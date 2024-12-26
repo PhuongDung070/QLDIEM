@@ -444,9 +444,9 @@ a:hover {
     border-radius: 5px;
 }
 .tab-button {
-    flex: 1;                   /* Mỗi nút chiếm 1 phần bằng nhau */
-    text-align: center;        /* Căn giữa nội dung trong nút */
-    padding: 10px;             /* Khoảng cách trong nút */
+    flex: 1;              
+    text-align: center;    
+    padding: 10px;            
 	margin:10px;
 }
 .tabs{
@@ -544,3 +544,4 @@ select:disabled {
     justify-content: flex-start; /* Căn các nút về phía bên trái */
     gap: 10px;                   /* Khoảng cách giữa các nút */
 }
+

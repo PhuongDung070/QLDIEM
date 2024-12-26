@@ -11,30 +11,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Nếu action là delete
         if ($action === 'delete') {
             if (isset($_POST['type']) && $_POST['type'] === 'all') {
-                // Xóa toàn bộ thông tin (tài khoản, thông tin cá nhân, điểm số)
+               
                 if (!empty($selected_ids)) {
                     $placeholders = implode(',', array_fill(0, count($selected_ids), '?'));
 
                     // Bắt đầu transaction
                     $conn->begin_transaction();
                     try {
-                        // Xóa điểm số liên quan
-                        $stmt_scores = $conn->prepare("DELETE FROM 	ketquasv WHERE MaID IN ($placeholders)");
-                        $stmt_scores->bind_param(str_repeat('s', count($selected_ids)), ...$selected_ids);
-                        if (!$stmt_scores->execute()) {
-                            throw new Exception("Lỗi khi xóa điểm số: " . $stmt_scores->error);
+						$stmt_update = $conn->prepare("
+                             UPDATE thongkebaocao
+								SET MaID = NULL
+								WHERE MaID IN ($placeholders)
+                        ");
+                        $stmt_update->bind_param(str_repeat('s', count($selected_ids)), ...$selected_ids);
+                        if (!$stmt_update->execute()) {
+                            throw new Exception("Lỗi khi xóa thông tin báo cáo: " . $stmt_update->error);
                         }
-                        $stmt_scores->close();
+                        $stmt_update->close();
+                        
 
                         // Xóa sinh viên
-                        $stmt_students = $conn->prepare("DELETE FROM sinhvien WHERE MaID IN ($placeholders)");
-                        $stmt_students->bind_param(str_repeat('s', count($selected_ids)), ...$selected_ids);
-                        if (!$stmt_students->execute()) {
-                            throw new Exception("Lỗi khi xóa sinh viên: " . $stmt_students->error);
+                        $stmt_admins = $conn->prepare("DELETE FROM nhanvienquanly WHERE MaID IN ($placeholders)");
+                        $stmt_admins->bind_param(str_repeat('s', count($selected_ids)), ...$selected_ids);
+                        if (!$stmt_admins->execute()) {
+                            throw new Exception("Lỗi khi xóa nhân viên: " . $stmt_admins->error);
                         }
-                        $stmt_students->close();
+                        $stmt_admins->close();
 						
-                        // Xóa tài khoản (nếu cần)
+					    // Xóa sinh viên
+                        $stmt_staffs = $conn->prepare("DELETE FROM nhanvien WHERE MaID IN ($placeholders)");
+                        $stmt_staffs->bind_param(str_repeat('s', count($selected_ids)), ...$selected_ids);
+                        if (!$stmt_staffs->execute()) {
+                            throw new Exception("Lỗi khi xóa giảng viên: " . $stmt_staffs->error);
+                        }
+                        $stmt_staffs->close();
+                        // Xóa tài khoản 
                         $stmt_taikhoan = $conn->prepare("DELETE FROM taikhoan WHERE MaID IN ($placeholders)");
                         $stmt_taikhoan->bind_param(str_repeat('s', count($selected_ids)), ...$selected_ids);
                         if (!$stmt_taikhoan->execute()) {
@@ -43,13 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $stmt_taikhoan->close();
 
                         $conn->commit(); // Commit transaction
-                        $_SESSION['message'] = count($selected_ids) . " sinh viên đã được xóa toàn bộ thông tin thành công.";
+                        $_SESSION['message'] = count($selected_ids) . " nhân viên đã được xóa toàn bộ thông tin thành công.";
                     } catch (Exception $e) {
                         $conn->rollback(); // Rollback transaction nếu xảy ra lỗi
                         $_SESSION['message'] = "Xóa thất bại: " . $e->getMessage();
                     }
                 } else {
-                    $_SESSION['message'] = "Vui lòng chọn ....... viên để xóa.";
+                    $_SESSION['message'] = "Vui lòng chọn nhân viên để xóa.";
                 }
             } elseif (isset($_POST['type']) && $_POST['type'] === 'info') {
                 // Ẩn thông tin cá nhân, giữ lại tài khoản và điểm số
@@ -60,8 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     try {
                         // Cập nhật thông tin cá nhân để ẩn
                         $stmt_update = $conn->prepare("
-                             UPDATE sinhvien 
-								SET TenSV = CONCAT('Ẩn danh_', MaID), 
+                             UPDATE nhanvien 
+								SET TenNV = CONCAT('Ẩn danh_', MaID), 
 									DiaChi = NULL
 								WHERE MaID IN ($placeholders)
                         ");
@@ -83,13 +94,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                         $stmt_update_taikhoan->close();
                         $conn->commit(); // Commit transaction
-                        $_SESSION['message'] = count($selected_ids) . " sinh viên đã được ẩn thông tin cá nhân thành công.";
+                        $_SESSION['message'] = count($selected_ids) . " nhân viên đã được ẩn thông tin cá nhân thành công.";
                     } catch (Exception $e) {
                         $conn->rollback(); // Rollback transaction nếu xảy ra lỗi
                         $_SESSION['message'] = "Ẩn thông tin thất bại: " . $e->getMessage();
                     }
                 } else {
-                    $_SESSION['message'] = "Vui lòng chọn sinh viên để ẩn thông tin.";
+                    $_SESSION['message'] = "Vui lòng chọn nhân viên để ẩn thông tin.";
                 }
             } else {
                 $_SESSION['message'] = "Loại hành động không hợp lệ.";
@@ -101,16 +112,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Nếu action là edit
         elseif ($action === 'edit') {
             if (empty($selected_ids)) {
-                $_SESSION['message'] = "Chưa chọn sinh viên.";
+                $_SESSION['message'] = "Chưa chọn nhân viên.";
                 header("Location: user_management.php");
                 exit;
             } elseif (count($selected_ids) > 1) {
-                $_SESSION['message'] = "Chỉ chọn 1 sinh viên để chỉnh sửa.";
+                $_SESSION['message'] = "Chỉ chọn 1 nhân viên để chỉnh sửa.";
                 header("Location: user_management.php");
                 exit;
             } else {
                 $maID = $selected_ids[0];
-                header("Location: student_details.php?MaID=$maID");
+                header("Location: admin_details.php?MaID=$maID");
                 exit;
             }
         }
@@ -122,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
     } else {
-        $_SESSION['message'] = "Vui lòng chọn sinh viên và hành động cần thực hiện.";
+        $_SESSION['message'] = "Vui lòng chọn nhân viên và hành động cần thực hiện.";
         header("Location: user_management.php");
         exit;
     }

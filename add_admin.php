@@ -11,7 +11,9 @@ if (!isset($_SESSION['MaID'])) {
     exit();
 }
 $user_id = $_SESSION['MaID'];
+	
 	$admin_info = get_nhanvien_info($conn, $user_id);
+
 	if ($admin_info) {
     $ma_nhan_vien = $admin_info['MaID'];
     $ten_nhan_vien = $admin_info['TenNV'];
@@ -22,6 +24,7 @@ $user_id = $_SESSION['MaID'];
 
 // Lấy danh sách các khoa
 $result_khoa = get_khoa_list($conn);
+
 $error_msg = "";
 $success_msg = "";
 function generateUsername($prefix) {
@@ -39,30 +42,28 @@ function generatePassword() {
     return $password;
 }
 
-// Xử lý thêm mới sinh viên khi gửi form
+// Xử lý thêm mới nhân viên khi gửi form
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add'])) {
     // Lấy dữ liệu từ form
     $maID = $_POST['MaID'];
-    $tenSV = $_POST['TenSV'];
+    $tenNV = $_POST['TenNV'];
     $diaChi = $_POST['DiaChi'];
     $ngaySinh = $_POST['NgaySinh'];
     $gioiTinh = $_POST['GioiTinh'];
     $sdt = $_POST['SDT'];
     $email = $_POST['Email'];
-    $lopHC = $_POST['LopHC'];
-    $khoaHoc = $_POST['KhoaHoc'];
-    $hinhThucDT = $_POST['HinhThucDT'];
-    $maKhoa = $_POST['MaKhoa'];
+	$phongBan = $_POST['PhongBan'];
+    $chucVu = $_POST['ChucVu'];
 
-    // Tạo MaID cho sinh viên (SV....)'
-	$role = "SV";
+    // Tạo MaID cho sinh viên (SV....)
+    $role = "QL";
     $maID = generate_unique_maID($conn, $role);
-    // Tạo tên đăng nhập cho sinh viên
+    // Tạo tên đăng nhập
     $tenDangNhap = generateUsername($maID);
     // Tạo mật khẩu ngẫu nhiên
     $matKhau = generatePassword();
     // Quyền mặc định là sinh viên
-    $quyen = 'SinhVien';
+    $quyen = 'quanly';
 
      // Câu lệnh SQL để thêm tài khoản vào bảng taikhoan
     $sql_taikhoan = "INSERT INTO taikhoan (MaID, TenDangNhap, MatKhau, Quyen) 
@@ -72,21 +73,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add'])) {
 
     // Thực thi câu lệnh SQL thêm tài khoản
     if ($stmt_taikhoan->execute()) {
-        // Thêm thông tin sinh viên vào bảng sinhvien
-        $sql_sinhvien = "INSERT INTO sinhvien (MaID, TenSV, DiaChi, NgaySinh, GioiTinh, SDT, Email, LopHC, KhoaHoc, HinhThucDT, MaKhoa) 
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt_sinhvien = $conn->prepare($sql_sinhvien);
-        $stmt_sinhvien->bind_param("sssssssssss", $maID, $tenSV, $diaChi, $ngaySinh, $gioiTinh, $sdt, $email, $lopHC, $khoaHoc, $hinhThucDT, $maKhoa);
+        // Thêm thông tin nhân viên vào bảng nhân viên
+        $sql_nhanvien = "INSERT INTO nhanvien (MaID, TenNV, NgaySinh, DiaChi, GioiTinh, SDT, Email) 
+                         VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmt_nhanvien = $conn->prepare($sql_nhanvien);
+        $stmt_nhanvien->bind_param("sssssss", $maID, $tenNV, $ngaySinh, $diaChi, $gioiTinh, $sdt, $email);
 
         // Thực thi câu lệnh SQL thêm sinh viên
-        if ($stmt_sinhvien->execute()) {
-            $success_msg = "Thêm sinh viên và tài khoản thành công!";
+        if ($stmt_nhanvien->execute()) {
+			$sql_quanly = "INSERT INTO nhanvienquanly (MaID, PhongBan, ChucVu) 
+                         VALUES (?, ?, ?)";
+			$stmt_quanly = $conn->prepare($sql_quanly);
+			$stmt_quanly->bind_param("sss", $maID, $phongBan, $chucVu);
+            
+			if ($stmt_quanly->execute()) {
+            $success_msg = "Thêm tài khoản và nhân viên quản lý thành công!";
         } else {
-            $error_msg = "Lỗi khi thêm sinh viên: " . $stmt_sinhvien->error;
+            $error_msg = "Lỗi khi thêm nhân viên: " . $stmt_quanly->error;
         }
 
-        // Đóng câu lệnh thêm sinh viên
-        $stmt_sinhvien->close();
+        // Đóng câu lệnh thêm giảng viên
+        $stmt_quanly->close();
+        } else {
+            $error_msg = "Lỗi khi thêm nhân viên: " . $stmt_sinhvien->error;
+        }
+
+        // Đóng câu lệnh thêm nhân viên
+        $stmt_nhanvien->close();
     } else {
         $error_msg = "Lỗi khi thêm tài khoản: " . $stmt_taikhoan->error;
     }
@@ -166,10 +179,10 @@ $conn->close();
 				<div class="student-details">
 					<form method="POST">
 							<button type="button" id="backButton">BACK</button>
-							<button type="submit" name="add">Thêm sinh viên</button>	
+							<button type="submit" name="add">Thêm nhân viên</button>	
 							<table border="1">
 								<tr>
-									<td><strong>Mã sinh viên</strong></td>
+									<td><strong>Mã nhân viên</strong></td>
 									<td>
 										<input type="text" name="MaID" readonly value="<?php echo isset($maID) ? $maID : ''; ?>" placeholder="Tự động tạo mã"/>
 									</td>
@@ -177,19 +190,19 @@ $conn->close();
 								<tr>
 									<td><strong>Họ tên</strong></td>
 									<td>
-										<input type="text" name="TenSV" required />
-									</td>
-								</tr>
-								<tr>
-									<td><strong>Địa chỉ</strong></td>
-									<td>
-										<input type="text" name="DiaChi" required />
+										<input type="text" name="TenNV" required />
 									</td>
 								</tr>
 								<tr>
 									<td><strong>Ngày sinh</strong></td>
 									<td>
 										<input type="date" name="NgaySinh" required />
+									</td>
+								</tr>
+								<tr>
+									<td><strong>Địa chỉ</strong></td>
+									<td>
+										<input type="text" name="DiaChi" required />
 									</td>
 								</tr>
 								<tr>
@@ -205,7 +218,7 @@ $conn->close();
 								<tr>
 									<td><strong>Số điện thoại</strong></td>
 									<td>
-										<input type="text" name="SDT"required />
+										<input type="text" name="SDT" required />
 									</td>
 								</tr>
 								<tr>
@@ -215,34 +228,15 @@ $conn->close();
 									</td>
 								</tr>
 								<tr>
-									<td><strong>Lớp hành chính</strong></td>
+									<td><strong>Phòng ban</strong></td>
 									<td>
-										<input type="text" name="LopHC" required />
+										<input type="text" name="PhongBan"  required />
 									</td>
 								</tr>
 								<tr>
-									<td><strong>Ngành Học</strong></td>
-									<td> 
-									<select name="MaKhoa" required>
-										<option value=""> Chọn Ngành</option>
-									<?php
-										while ($khoa = $result_khoa->fetch_assoc()) {
-											echo "<option value='" . $khoa['MaKhoa'] . "'>" . htmlspecialchars($khoa['TenKhoa']) . "</option>";
-										}
-                                    ?>
-									</select>
-									</td>
-								</tr>
-								<tr>
-									<td><strong>Khóa Học</strong></td>
+									<td><strong>Chức vụ</strong></td>
 									<td>
-										<input type="text" name="KhoaHoc"  required />
-									</td>
-								</tr>
-								<tr>
-									<td><strong>Hình thức đào tạo</strong></td>
-									<td>
-										<input type="text" name="HinhThucDT" required />
+										<input type="text" name="ChucVu"  required />
 									</td>
 								</tr>
 							</table>			

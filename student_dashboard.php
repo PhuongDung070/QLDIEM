@@ -15,7 +15,7 @@ if ($student_info) {
     $ma_sinh_vien = $student_info['MaID'];
     $ten_sinh_vien = $student_info['TenSV'];
 } else {
-    $error_msg ="Người dùng không tồn tại!";
+    header("Location: thongbaodangnhap.php?message=Người dùng không tồn tại!");
     exit();
 }
 
