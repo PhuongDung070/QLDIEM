@@ -1,0 +1,547 @@
+/* Reset some default styles */
+body, h1, h5{
+    margin: 0;
+    padding: 0;
+}
+
+/* Body styles */
+body {
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f3f3f3;
+    font-family: 'Helvetica', sans-serif;
+}
+
+/* Main container styles */
+.main {
+	margin-left: 50px;
+	margin-right: 50px;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    text-align: center;
+}
+/*banner styles*/
+.banner {
+    height: 100%; 
+    overflow: hidden; 
+}
+
+.banner img {
+    width: 102%; 
+    height: auto; 
+    display: block; 
+}
+/* Heading styles */
+h1, h5{
+    color: #333;
+    margin: 10px;
+}
+h1{	
+	padding: 10px;
+}
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+    color: #555;
+    background-color: #fff;
+    border-radius: 10px;
+    
+}
+tbody {
+    text-align: center; /* Căn giữa theo chiều ngang */
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+}
+th,td{
+    text-align: center; /* Căn giữa theo chiều ngang */
+    vertical-align: middle; /* Căn giữa theo chiều dọc */
+    padding: 10px; /* Thêm khoảng cách bên trong ô */
+    border: 1px solid #ddd; /* Thêm viền cho bảng */
+}
+
+/* Header row styles */
+.info-card table thead {
+    background-color: #f4f4f4;
+    color: #333;
+    text-align: left;
+    font-weight: bold;
+    border-bottom: 2px solid #ddd;
+}
+
+.info-card table thead th {
+    padding: 12px 15px;
+}
+
+/* Row styles */
+.info-card table tr {
+    border-bottom: 1px solid #ddd;
+}
+
+.info-card table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.info-card table td {
+	text-align: center;
+    padding: 12px 15px;
+    color: #555;
+    text-align: left;
+}
+
+/* First column styles */
+.info-card table td:first-child {
+    font-weight: bold;
+}
+
+/* Last column styles */
+.info-card table td:last-child {
+    color: #333;
+}
+
+/* Table borders */
+.info-card table td, table th {
+    border: 1px solid #ddd;
+}
+
+/* Responsive table styles */
+@media screen and (max-width: 768px) {
+    table {
+        font-size: 12px;
+    }
+
+    table td, table th {
+        padding: 10px;
+    }
+}
+
+/* Label styles */
+label {
+	text-align: left;
+    display: block;
+    margin-top: 10px;
+    font-weight: normal;
+	font-size: 15px;
+}
+
+/* Input field styles */
+input[type="text"],input[type="password"],input[type="date"], input[type="email"], select {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+/* Button styles */
+button{
+    width: 48%;
+    padding: 10px;
+    background-color: #2C4A77;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #142E5C ;
+}
+
+
+.btn-add:hover {
+    background-color: #142E5C ;
+}
+
+/* Error message styles */
+#error-msg {
+    display: none;
+    color: red;
+    margin-top: 20px;
+	font-family: 'Roboto', sans-serif;
+}
+.header {
+    background-color: #0054B0;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px;
+    color: rgb(244, 128, 32);
+	position: fixed; /* Cố định header */
+    top: 0; /* Căn header ở trên cùng */
+    left: 0;
+    width: 100%; /* Đảm bảo header trải dài toàn màn hình */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	z-index: 1000; 
+}
+
+.menubar button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.title .logo {
+    width: 70px;
+    height: auto;
+}
+
+.title h2 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.icons {
+    display: flex;
+    gap: 15px;
+}
+
+.flag {
+    width: 30px;
+    height: 20px;
+}
+
+.profile {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile i {
+    color: #fff;
+    font-size: 18px;
+}
+
+.slidebar {
+    width: 260px; 
+    background-color: #f4f4f4;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    position: fixed; 
+    height: 80%;
+    overflow-y: auto; 
+	margin-top: -30px;
+	left: -350px; /* Ẩn slidebar ra khỏi màn hình */
+    transition: left 0.3s ease;
+	overflow-y: auto;
+}
+
+.slidebar.active {
+    left: 0; 
+}
+.slidebar div {
+    margin-bottom: 20px; 
+}
+
+
+.slidebar .title {
+    font-size: 18px; 
+    font-weight: bold; 
+    margin-bottom: 10px; 
+}
+	
+
+a {
+    display: block; 
+    padding: 10px;
+    color: #333;
+    text-decoration: none; 
+    border-radius: 20px;
+    transition: background-color 0.3s; 
+	font-size: 15px;
+}
+
+
+
+a:hover {
+    background-color: #ddd; 
+}
+
+.infor {
+	text-align: center; 
+    margin-bottom: 20px;
+    gap: 15px; 
+}
+
+.infor .logo {
+    width: 70px; 
+    height: 70px;
+    border-radius: 50%; 
+	justify-content: center;
+}
+
+.infor-text {
+    flex-direction: column; 
+    justify-content: center; 
+	align-items: center; 
+    text-align: center;
+}
+
+.infor-text p {
+    margin: 0; 
+    font-size: 16px; 
+    line-height: 1.5; 
+}
+.slidebar > div {
+    width: 100%;
+    border-bottom: 2px solid #ddd; 
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.slidebar > div:last-child {
+    border-bottom: none; 
+}
+
+
+.profile-container {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%; 
+    right: 0; 
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1000; 
+    min-width: 150px;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    border-bottom: 1px solid #ddd;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f4f4f4;
+}
+
+.dropdown-menu a:last-child {
+    border-bottom: none;
+}
+.info-card{
+    display: flex;
+    width: 80%;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 10px;	
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+	gap: 20px;
+}
+.info-container h3 {
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+
+.profile-section {
+    gap: 20px;
+    align-items: center;
+}
+
+.profile-image {
+    width: 100px;
+    height: 100px;
+    background-color: #ddd;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.main-content {
+    margin-left: 0; /* Khi slidebar đóng */
+    transition: margin-left 0.3s ease; /* Tạo hiệu ứng mượt mà */
+}
+.infor-left
+{
+	width: 300px;
+	align-items: center;
+}
+.infor-left img{
+	width: 100px;  
+	margin-top: 50px;
+	margin-left: 60px;
+	margin-right: 50px;
+	
+}
+.infor-right
+{
+	width: 100%;
+}
+.slidebar.active ~ .main-content {
+    margin-left: 250px; /* Tăng khoảng cách bên trái bằng với chiều rộng của slidebar */
+}
+@media screen and (max-width: 900px) {
+    .slidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .slidebar.active {
+        transform: translateX(0);
+    }
+	.school-name {
+        display: none; 
+    }
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.tab-content {
+	text-align: center;
+	justify-content: center;
+    padding: 20px;
+    border-radius: 5px;
+}
+.tab-button {
+    flex: 1;              
+    text-align: center;    
+    padding: 10px;            
+	margin:10px;
+}
+.tabs{
+    display: flex;
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+	gap: 20px;
+}
+
+.confirmation-popup .popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.confirmation-popup .popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    width: 300px;
+}
+
+.confirmation-popup .popup-content button {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.confirmation-popup .popup-content button:hover {
+    background-color: #45a049;
+}
+
+.confirmation-popup .popup-content #cancelButton {
+    background-color: #f44336;
+}
+
+.confirmation-popup .popup-content #cancelButton:hover {
+    background-color: #e53935;
+}
+
+/* Đảm bảo checkbox có thể chọn được */
+input[type="checkbox"] {
+    pointer-events: auto; /* Cho phép tương tác */
+    opacity: 1;           /* Đảm bảo checkbox hiển thị đầy đủ */
+    cursor: pointer;      /* Thay đổi con trỏ thành dạng chọn */
+	z-index: 1000;
+}
+
+/* Tùy chỉnh checkbox: Kích thước */
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+	
+}
+
+/* Hiển thị khi checkbox được chọn */
+input[type="checkbox"]:checked {
+    accent-color: #007bff; /* Màu xanh lam khi được chọn (mặc định trên trình duyệt hiện đại) */
+}
+
+/* Tùy chỉnh khi checkbox được hover */
+input[type="checkbox"]:hover {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    border-color: #007bff;
+}
+
+/* Đảm bảo checkbox hiển thị rõ trong bảng */
+table input[type="checkbox"] {
+    vertical-align: middle; /* Căn giữa trong ô */
+}
+
+
+select:disabled {
+    background-color: #f5f5f5; /* Màu nền khi bị vô hiệu hóa */
+    color: #aaa; /* Màu chữ khi bị vô hiệu hóa */
+    cursor: not-allowed; /* Con trỏ chuột khi bị vô hiệu hóa */
+}
+
+
+.infor1 {
+    display: flex;               /* Sử dụng flexbox để bố trí các nút */
+    justify-content: flex-start; /* Căn các nút về phía bên trái */
+    gap: 10px;                   /* Khoảng cách giữa các nút */
+}
+
